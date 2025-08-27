@@ -6,11 +6,7 @@ chrome.runtime.onInstalled.addListener(() => {
 
 // 處理來自內容腳本的訊息
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  // 轉發訊息到 popup（如果打開的話）
-  try {
-    chrome.runtime.sendMessage(message);
-  } catch (error) {
-    // 忽略錯誤，popup 可能沒有打開
-    console.log('轉發訊息失敗，popup 可能沒有打開');
-  }
+  // 不需要轉發訊息，popup 會直接監聽來自 content script 的訊息
+  // 這裡只是記錄訊息，避免循環發送
+  console.log('收到訊息:', message);
 });

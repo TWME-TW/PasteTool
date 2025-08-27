@@ -154,12 +154,14 @@ class NoVNCPasteTool {
         
         const char = text[i];
         
-        // 發送進度
-        this.sendMessage({
-          action: 'pasteProgress',
-          current: i + 1,
-          total: text.length
-        });
+        // 只在每 10 個字符或最後一個字符時發送進度
+        if (i % 10 === 0 || i === text.length - 1) {
+          this.sendMessage({
+            action: 'pasteProgress',
+            current: i + 1,
+            total: text.length
+          });
+        }
         
         // 模擬輸入
         element.value += char;
@@ -190,12 +192,14 @@ class NoVNCPasteTool {
 
       const char = text[i];
       
-      // 發送進度
-      this.sendMessage({
-        action: 'pasteProgress',
-        current: i + 1,
-        total: text.length
-      });
+      // 只在每 10 個字符或最後一個字符時發送進度
+      if (i % 10 === 0 || i === text.length - 1) {
+        this.sendMessage({
+          action: 'pasteProgress',
+          current: i + 1,
+          total: text.length
+        });
+      }
 
       // 處理特殊字符
       if (char === '\n') {
@@ -278,9 +282,20 @@ class NoVNCPasteTool {
 
   sendMessage(message) {
     try {
-      chrome.runtime.sendMessage(message);
+      chrome.runtime.sendMessage(message, (response) => {
+        // 檢查是否有錯誤
+        if (chrome.runtime.lastError) {
+          // 這是正常情況，popup 可能沒有打開
+          console.log('訊息發送失敗（正常）:', chrome.runtime.lastError.message);
+          return;
+        }
+        // 如果有回應，處理回應
+        if (response) {
+          console.log('收到回應:', response);
+        }
+      });
     } catch (error) {
-      console.log('發送訊息失敗:', error);
+      console.log('發送訊息時發生錯誤:', error);
     }
   }
 
