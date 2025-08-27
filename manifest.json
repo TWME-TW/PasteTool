@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "noVNC 文字貼上工具",
+  "version": "1.0.0",
+  "description": "在 noVNC 環境下緩慢輸入文字的工具",
+  
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  
+  "background": {
+    "service_worker": "background.js"
+  },
+  
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "noVNC 文字貼上工具"
+  }
+}
